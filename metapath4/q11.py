@@ -133,9 +133,9 @@ class smart_shark:
         dic = defaultdict(set)
         for i, path in enumerate(metapaths):
             keys, vals = list(path.keys()), list(path.values())
-        for i in range(len(keys) - 1):
-            is_path[vals[i]][vals[i + 1]] = 1
-            dic[keys[i]].add(vals[i])
+            for i in range(len(keys) - 1):
+                is_path[vals[i]][vals[i + 1]] = 1
+                dic[keys[i]].add(vals[i])
             dic[keys[-1]].add(vals[-1])
         # Adjacency Matrix (W)
         W = []
@@ -147,7 +147,6 @@ class smart_shark:
             for j, x1 in enumerate(vals[i]):
                 for k, x2 in enumerate(vals[i + 1]):
                     adj[j][k] = is_path[x1][x2]
-            
             W.append(adj)
         # Transition Probability Matrix (U = W / |W|)
         for i, w in enumerate(W):
@@ -155,31 +154,30 @@ class smart_shark:
             for j, sum_ in enumerate(row_sums):
                 if sum_ > 0:
                     W[i][j] /= sum_
-        print(W[0])
-        
+                    
+        # print(W)
         return W, dic
     
-    def get_Mp(self, metapaths, U):
+    def get_Mp(self, U):
 
         Mp = U[0]
-        print(Mp.shape)
         for i in range(1, len(U)):
             Mp = Mp @ U[i]
         row_sums = Mp.sum(axis=1)[:, None]
         for i, sum_ in enumerate(row_sums):
             if sum_ > 0:
                 Mp[i] /= sum_
-                
-        print("Metapath Matrix:", Mp)
         return Mp
     
-    def hrank_SY(self, Mp, alpha, n_iter):
-
-        length = len(Mp)
-        rank = np.zeros(length) + 1 / length
+    def hrank_AS(self, Mp, Mp_inv, alpha, n_iter):
+        length1 = len(Mp)
+        length2 = len(Mp_inv)
+        rank = np.zeros(length1) + 1 / length1
+        rank_inv = np.zeros(length2) + 1 / length2
         for i in range(n_iter):
-            rank = alpha * rank @ Mp + (1 - alpha) / length
-        return rank
+            rank_inv = alpha * rank @ Mp + (1 - alpha) / length2
+            rank = alpha * rank_inv @ Mp_inv + (1 - alpha) / length1
+        return rank, rank_inv
                                     
 if __name__ == "__main__":
     
@@ -189,17 +187,25 @@ if __name__ == "__main__":
     
     STQ.find_mean_rejected_prs()
     metapaths = STQ.find_less_than_mean_prs()
+    reversed_metapaths = list()
+    for dic in metapaths:
+        reversed_metapaths.append(dict(reversed(list(dic.items()))))
     
     # Create H-Rankings
     
     U, dic = STQ.transition_probability_matrix(metapaths)
-    Mp = STQ.get_Mp(metapaths, U)
+    Mp = STQ.get_Mp(U)
+    
+    inv_U, inv_dic = STQ.transition_probability_matrix(reversed_metapaths)
+    inv_Mp = STQ.get_Mp(inv_U)
+    
     alpha = 0.87
     number_of_iterations = 15
     
-    ranking = STQ.hrank_SY(Mp, alpha, number_of_iterations)
-    final_ranking = STQ.construct_ranks(metapaths, dic, ranking)
+    ranks_hrank, _ = STQ.hrank_AS(Mp, inv_Mp, alpha, number_of_iterations)
+    ranks3 = STQ.construct_ranks(metapaths, dic, ranks_hrank)
     
+    print(ranks3)
     
 
 

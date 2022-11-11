@@ -11,7 +11,7 @@ class smart_shark:
         
         self.pr_mean_time = 0
         
-        self.more_than_pr_mean_time = dict()
+        self.more_than_pr_mean_time = list()
     
         self.client = MongoClient("mongodb://localhost:27017/")
     
@@ -33,9 +33,6 @@ class smart_shark:
         
         for review in self.list_reviews:
             
-            reviewer_id = str(review["creator_id"])
-            review_id = str(review["_id"])
-            
             corresponding_pr = review["pull_request_id"]
             review_time = int(round(review["submitted_at"].timestamp()))
                         
@@ -45,32 +42,14 @@ class smart_shark:
                     
                     creation_time = int(round(pr["created_at"].timestamp()))
                     
-                    developer_id = str(pr["creator_id"]) 
+                    # print(f"Review time is {int(round(review_time.timestamp()))}")
+                    # print(f"Submission time is {int(round(creation_time.timestamp()))}")
                     
-                    pr_id = str(pr["_id"])
-                                                            
-                    if(review_time - creation_time > self.pr_mean_time):
-                        
-                        # print(f"Got a PR here: {pr_id}")
-                        
-                        list_files_in_pr = list(self.pull_request_files.find({"pull_request_id": pr["_id"]}))
-                        
-                        for file in list_files_in_pr:
-                        
-                            # print("Great success!")
-                        
-                            # self.more_than_pr_mean_time[developer_id] = review_time - creation_time
-                            self.more_than_pr_mean_time.append(
-                                {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
-                                    "pull_request": pr_id, 
-                                    "developer": developer_id,
-                                }
-                            )
-        
-        # for doc in self.more_than_pr_mean_time:
-        #     print(doc)
+                    total_time = total_time + review_time - creation_time
+                    total_reviews = total_reviews + 1
+                    
+        self.pr_mean_time = int(round(total_time/total_reviews))
+        print(f"Average decision time for all PRs is {self.pr_mean_time} seconds")
         
     def find_more_than_mean_prs(self):
         
@@ -78,10 +57,10 @@ class smart_shark:
         
         self.pull_request_reviews = self.db["pull_request_review"]
         self.pull_request = self.db["pull_request"]
+        self.pull_request_files = self.db["pull_request_file"]
         
         self.list_reviews = list(self.pull_request_reviews.find({"creator_id": {"$exists": True}}))
-        self.list_prs = list(self.pull_request.find({"target_repo_url": target_repo}))
-        # self.list_prs = list(self.pull_request.find({}))
+        self.list_prs = list(self.pull_request.find({"target_repo_url": target_repo, "creator_id": {"$exists": True}}))
                 
         for review in self.list_reviews:
             
@@ -124,6 +103,8 @@ class smart_shark:
         
         # for doc in self.more_than_pr_mean_time:
         #     print(doc)
+        
+        return self.more_than_pr_mean_time
     
     def construct_ranks(self, metapaths, dic, ranks_hrank):
         
@@ -145,9 +126,9 @@ class smart_shark:
         dic = defaultdict(set)
         for i, path in enumerate(metapaths):
             keys, vals = list(path.keys()), list(path.values())
-        for i in range(len(keys) - 1):
-            is_path[vals[i]][vals[i + 1]] = 1
-            dic[keys[i]].add(vals[i])
+            for i in range(len(keys) - 1):
+                is_path[vals[i]][vals[i + 1]] = 1
+                dic[keys[i]].add(vals[i])
             dic[keys[-1]].add(vals[-1])
         # Adjacency Matrix (W)
         W = []
@@ -159,7 +140,6 @@ class smart_shark:
             for j, x1 in enumerate(vals[i]):
                 for k, x2 in enumerate(vals[i + 1]):
                     adj[j][k] = is_path[x1][x2]
-            
             W.append(adj)
         # Transition Probability Matrix (U = W / |W|)
         for i, w in enumerate(W):
@@ -167,31 +147,30 @@ class smart_shark:
             for j, sum_ in enumerate(row_sums):
                 if sum_ > 0:
                     W[i][j] /= sum_
-        print(W[0])
-        
+                    
+        # print(W)
         return W, dic
     
-    def get_Mp(self, metapaths, U):
+    def get_Mp(self, U):
 
         Mp = U[0]
-        print(Mp.shape)
         for i in range(1, len(U)):
             Mp = Mp @ U[i]
         row_sums = Mp.sum(axis=1)[:, None]
         for i, sum_ in enumerate(row_sums):
             if sum_ > 0:
                 Mp[i] /= sum_
-                
-        print("Metapath Matrix:", Mp)
         return Mp
     
-    def hrank_SY(self, Mp, alpha, n_iter):
-
-        length = len(Mp)
-        rank = np.zeros(length) + 1 / length
+    def hrank_AS(self, Mp, Mp_inv, alpha, n_iter):
+        length1 = len(Mp)
+        length2 = len(Mp_inv)
+        rank = np.zeros(length1) + 1 / length1
+        rank_inv = np.zeros(length2) + 1 / length2
         for i in range(n_iter):
-            rank = alpha * rank @ Mp + (1 - alpha) / length
-        return rank            
+            rank_inv = alpha * rank @ Mp + (1 - alpha) / length2
+            rank = alpha * rank_inv @ Mp_inv + (1 - alpha) / length1
+        return rank, rank_inv     
                                     
 if __name__ == "__main__":
     
@@ -201,15 +180,24 @@ if __name__ == "__main__":
     
     STQ.find_mean_prs()
     metapaths = STQ.find_more_than_mean_prs()
+    reversed_metapaths = list()
+    for dic in metapaths:
+        reversed_metapaths.append(dict(reversed(list(dic.items()))))
     
     # Create H-Rankings
     
     U, dic = STQ.transition_probability_matrix(metapaths)
-    Mp = STQ.get_Mp(metapaths, U)
+    Mp = STQ.get_Mp(U)
+    
+    inv_U, inv_dic = STQ.transition_probability_matrix(reversed_metapaths)
+    inv_Mp = STQ.get_Mp(inv_U)
+    
     alpha = 0.87
     number_of_iterations = 15
     
-    ranking = STQ.hrank_SY(Mp, alpha, number_of_iterations)
-    final_ranking = STQ.construct_ranks(metapaths, dic, ranking)
+    ranks_hrank, _ = STQ.hrank_AS(Mp, inv_Mp, alpha, number_of_iterations)
+    ranks3 = STQ.construct_ranks(metapaths, dic, ranks_hrank)
+    
+    print(ranks3)
         
         

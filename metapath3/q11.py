@@ -1,3 +1,6 @@
+## D ---> PR ---> PR Comment ---> Developer
+
+
 from pymongo import MongoClient
 import numpy as np
 from collections import defaultdict
@@ -70,6 +73,7 @@ class smart_shark:
         for review in self.list_reviews:
             
             reviewer_id = str(review["creator_id"])
+            review_id = str(review["_id"])
             
             corresponding_pr = review["pull_request_id"]
             review_time = int(round(review["submitted_at"].timestamp()))
@@ -98,8 +102,8 @@ class smart_shark:
                             self.less_rejected_pr_ranking.append(
                                 {
                                     "developer": developer_id,
-                                    "file": str(file["_id"]),
                                     "pull_request": pr_id,
+                                    "pull_request_review": review_id,
                                     "reviewer": reviewer_id,
                                 }
                             )
