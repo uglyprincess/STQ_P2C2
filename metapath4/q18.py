@@ -107,8 +107,8 @@ class smart_shark:
                             self.more_rejected_pr_ranking.append(
                                 {
                                     "reviewer": reviewer_id,
-                                    "pull_request": pr_id,
-                                    "pull_request_review": review_id, 
+                                    "pull_request_review": review_id,
+                                    "pull_request": pr_id, 
                                     "developer": developer_id,
                                 }
                             )

@@ -97,10 +97,10 @@ class smart_shark:
                             # self.accepted_pr_ranking[developer_id] = review_time - creation_time
                             self.accepted_pr_ranking.append(
                                 {
-                                    "developer": developer_id,
-                                    "pull_request": pr_id,
-                                    "pull_request_review": review_id,
                                     "reviewer": reviewer_id,
+                                    "pull_request_review": review_id,
+                                    "pull_request": pr_id, 
+                                    "developer": developer_id,
                                 }
                             )
         

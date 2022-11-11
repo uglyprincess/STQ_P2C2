@@ -62,10 +62,10 @@ class smart_shark:
                             # self.more_than_pr_mean_time[developer_id] = review_time - creation_time
                             self.more_than_pr_mean_time.append(
                                 {
-                                    "developer": developer_id,
-                                    "pull_request": pr_id,
-                                    "pull_request_review": review_id,
                                     "reviewer": reviewer_id,
+                                    "pull_request_review": review_id,
+                                    "pull_request": pr_id, 
+                                    "developer": developer_id,
                                 }
                             )
         
