@@ -1,10 +1,12 @@
-## D ---> PR ---> PR Review ---> Developer
+## D ---> PR ---> File ---> PR ---> Developer
 
 from pymongo import MongoClient
 from HRanking import HRank
 from Requirements import smartshark
+from Build_reverse_identity_dictionary import Build_reverse_identity_dictionary
+from bson import ObjectId
 
-class metapath_4():
+class metapath_2():
     
     def __init__(self):
         
@@ -16,318 +18,128 @@ class metapath_4():
         target_repo = "https://github.com/apache/" + self.project  
         
         self.pull_requests = self.db["pull_request"]
-        self.pull_requests_list = list(self.pull_requests.find({"creator_id": {"$exists": True}}))
         self.pull_request_files = self.db["pull_request_file"]
-        self.files_list = list(self.pull_request_files.find({"pull_request_id": {"$exists": True}}))
+        
+        self.BRID = Build_reverse_identity_dictionary()
+        self.BRID.reading_identity_and_people_and_building_reverse_identity_dictionary()
                 
-    def metapath_4_req_1(self, mean_time):
+    def metapath_2_req_1(self, mean_time):
         
         prs_list = STQ.find_less_than_rejected_prs(mean_time)
         
-        prs_dict = dict()
-        
-        for pr in prs_list:
-            prs_dict[pr] = True
-        
-        print(len(prs_dict))     
         metapaths = []
         
-        self.files = list()
-        
-        # for f in self.files_list:
+        for pr_1 in prs_list:
             
-        #     if prs_dict[f["pull_request_id"]] == True:
-        #         self.files.append(f)
-                
-        for file_1 in self.files:
+            files_list_1 = prs_list[pr_1]
             
-            if prs_dict[file_1["pull_request_id"]] == True:        
+            for pr_2 in prs_list:
                 
-                for file_2 in self.files:
+                if(pr_1 is not pr_2):
+                    
+                    files_list_2 = prs_list[pr_2]
+                    
+                    for file_1 in files_list_1:
                         
-                        if prs_dict[file_2["pull_request_id"]] == True:
+                        file_1_path = self.pull_request_files.find_one({"_id": ObjectId(file_1)})["path"]
+                        # print(file_1_path)
+                        
+                        for file_2 in files_list_2:
                             
-                            if(str(file_1["_id"]) == str(file_2["_id"]) and str(file_1["pull_request_id"]) != str(file_2["pull_request_id"])):
-                                pull_request_1 = self.pull_requests_list.find_one({"_id": file_1["pull_request_id"]})
-                                pull_request_2 = self.pull_requests_list.find_one({"_id": file_2["pull_request_id"]})
+                            file_2_path = self.pull_request_files.find_one({"_id": ObjectId(file_2)})["path"]
+                            # print(file_2_path)
+                            
+                            if(file_1_path is file_2_path):
+                                
+                                print("Files matched!")
+                                
+                                developer_1 = self.pull_requests.find_one({"_id": ObjectId(pr_1)})["creator_id"]
+                                developer_2 = self.pull_requests.find_one({"_id": ObjectId(pr_2)})["creator_id"]
+                                
+                                actual_developer_1 = str(self.BRID.reverse_identity_dict[developer_1])
+                                actual_developer_2 = str(self.BRID.reverse_identity_dict[developer_2])
+                                
                                 metapaths.append(
                                     {
-                                        "developer_1": str(pull_request_1["creator_id"]),
-                                        "pull_request_1": str(pull_request_1["_id"]),
-                                        "file": str(file_1["_id"]),
-                                        "developer_2": str(pull_request_2["creator_id"]),
-                                        "pull_request_2": str(pull_request_2["_id"]),
+                                        "developer_1": actual_developer_1,
+                                        "pr_1": pr_1,
+                                        "file": file_1_path,
+                                        "pr_2": pr_2,
+                                        "developer_2": actual_developer_2
                                     }
                                 )
-            
         
         return metapaths
 
-    def metapath_4_req_2(self, mean_time):
+    def metapath_2_req_2(self, mean_time):
         
         prs_list = STQ.find_more_than_rejected_prs(mean_time)
                 
         metapaths = []
         
-        for review in self.reviews_list:
+        for pr_1 in prs_list:
             
-            reviewer_id = str(review["creator_id"])
-            review_id = str(review["_id"])
-                        
-            for pr in prs_list:
-                if(str(review["pull_request_id"]) == pr):
-                                        
-                    for pr_info in self.pull_requests_list:
-                        
-                        if(str(pr_info["_id"])==pr):
-                            
-                            metapaths.append(
-                                {
-                                    "developer": str(pr_info["creator_id"]),
-                                    "pull_request": pr,
-                                    "pull_request_review": review_id,
-                                    "reviewer": reviewer_id
-                                }
-                            )
-        
-        return metapaths
-    
-    def metapath_4_req_3(self, mean_time):
-        
-        prs_list = STQ.find_less_than_all_prs(mean_time)
+            files_list_1 = prs_list[pr_1]
+            
+            for pr_2 in prs_list:
                 
-        metapaths = []
-        
-        for review in self.reviews_list:
-            
-            reviewer_id = str(review["creator_id"])
-            review_id = str(review["_id"])
+                if(pr_1 is not pr_2):
+                    
+                    files_list_2 = prs_list[pr_2]
+                    
+                    for file_1 in files_list_1:
                         
-            for pr in prs_list:
-                if(str(review["pull_request_id"]) == pr):
-                                        
-                    for pr_info in self.pull_requests_list:
+                        file_1_path = self.pull_request_files.find_one({"_id": ObjectId(file_1)})["path"]
+                        # print(file_1_path)
                         
-                        if(str(pr_info["_id"])==pr):
+                        for file_2 in files_list_2:
                             
-                            metapaths.append(
-                                {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
-                                    "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
-                                }
-                            )
-        
-        return metapaths
-    
-    def metapath_4_req_4(self, mean_time):
-        
-        prs_list = STQ.find_more_than_all_prs(mean_time)
-                
-        metapaths = []
-        
-        for review in self.reviews_list:
-            
-            reviewer_id = str(review["creator_id"])
-            review_id = str(review["_id"])
-                        
-            for pr in prs_list:
-                if(str(review["pull_request_id"]) == pr):
-                                        
-                    for pr_info in self.pull_requests_list:
-                        
-                        if(str(pr_info["_id"])==pr):
+                            file_2_path = self.pull_request_files.find_one({"_id": ObjectId(file_2)})["path"]
+                            # print(file_2_path)
                             
-                            metapaths.append(
-                                {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
-                                    "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
-                                }
-                            )
-        
-        return metapaths
-    
-    def metapath_4_req_5(self, mean_time):
-        
-        prs_list = STQ.find_less_than_accepted_prs(mean_time)
-                
-        metapaths = []
-        
-        for review in self.reviews_list:
-            
-            reviewer_id = str(review["creator_id"])
-            review_id = str(review["_id"])
-                        
-            for pr in prs_list:
-                if(str(review["pull_request_id"]) == pr):
-                                        
-                    for pr_info in self.pull_requests_list:
-                        
-                        if(str(pr_info["_id"])==pr):
-                            
-                            metapaths.append(
-                                {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
-                                    "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
-                                }
-                            )
-        
-        return metapaths
-    
-    def metapath_4_req_6(self, mean_time):
-        
-        prs_list = STQ.find_more_than_accepted_prs(mean_time)
-                
-        metapaths = []
-        
-        for review in self.reviews_list:
-            
-            reviewer_id = str(review["creator_id"])
-            review_id = str(review["_id"])
-                        
-            for pr in prs_list:
-                if(str(review["pull_request_id"]) == pr):
-                                        
-                    for pr_info in self.pull_requests_list:
-                        
-                        if(str(pr_info["_id"])==pr):
-                            
-                            metapaths.append(
-                                {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
-                                    "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
-                                }
-                            )
-        
-        return metapaths
-    
-    def metapath_4_req_7(self, mean_time):
-        
-        prs_list = STQ.find_less_than_rejected_prs(mean_time)
-                
-        metapaths = []
-        
-        for review in self.reviews_list:
-            
-            reviewer_id = str(review["creator_id"])
-            review_id = str(review["_id"])
-                        
-            for pr in prs_list:
-                if(str(review["pull_request_id"]) == pr):
-                                        
-                    for pr_info in self.pull_requests_list:
-                        
-                        if(str(pr_info["_id"])==pr):
-                            
-                            metapaths.append(
-                                {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
-                                    "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
-                                }
-                            )
-        
-        return metapaths
-
-    def metapath_4_req_8(self, mean_time):
-        
-        prs_list = STQ.find_more_than_rejected_prs(mean_time)
-                
-        metapaths = []
-        
-        for review in self.reviews_list:
-            
-            reviewer_id = str(review["creator_id"])
-            review_id = str(review["_id"])
-                        
-            for pr in prs_list:
-                if(str(review["pull_request_id"]) == pr):
-                                        
-                    for pr_info in self.pull_requests_list:
-                        
-                        if(str(pr_info["_id"])==pr):
-                            
-                            metapaths.append(
-                                {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
-                                    "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
-                                }
-                            )
+                            if(file_1_path is file_2_path):
+                                
+                                print("Files matched!")
+                                
+                                developer_1 = self.pull_requests.find_one({"_id": ObjectId(pr_1)})["creator_id"]
+                                developer_2 = self.pull_requests.find_one({"_id": ObjectId(pr_2)})["creator_id"]
+                                
+                                actual_developer_1 = str(self.BRID.reverse_identity_dict[developer_1])
+                                actual_developer_2 = str(self.BRID.reverse_identity_dict[developer_2])
+                                
+                                metapaths.append(
+                                    {
+                                        "developer_1": actual_developer_1,
+                                        "pr_1": pr_1,
+                                        "file": file_1_path,
+                                        "pr_2": pr_2,
+                                        "developer_2": actual_developer_2
+                                    }
+                                )
         
         return metapaths
                                     
 if __name__ == "__main__":
     
     STQ = smartshark()
-    query = metapath_4()
-    mean_time = STQ.find_mean_rejected_prs()
+    query = metapath_2()
+    rejection_mean_time = STQ.find_mean_rejected_prs()
     # print(mean_time)
     
     # RQ1
     print("Requirement 1 for Metapath 4:\n")
-    req1 = query.metapath_4_req_1(mean_time)  
+    req1 = query.metapath_2_req_1(rejection_mean_time)  
+    print(req1)
     # Calling HRanking Function
     HRank.perform_asymmetric(req1)
     print()
     
-    # # RQ2
-    # print("Requirement 2 for Metapath 4:\n")    
-    # req2 = query.metapath_4_req_2(mean_time)
-    # # Calling HRanking Function
-    # HRank.perform_asymmetric(req2)
-    # print()
-
-    # # RQ3
-    # print("Requirement 3 for Metapath 4:\n")    
-    # req3 = query.metapath_4_req_3(mean_time)
-    # # Calling HRanking Function
-    # HRank.perform_asymmetric(req3)
-    # print()
-    
-    # # RQ4
-    # print("Requirement 4 for Metapath 4:\n")    
-    # req4 = query.metapath_4_req_4(mean_time)
-    # # Calling HRanking Function
-    # HRank.perform_asymmetric(req4)
-    # print()
-
-    # # RQ5
-    # print("Requirement 5 for Metapath 4:\n")    
-    # req5 = query.metapath_4_req_5(mean_time)
-    # # Calling HRanking Function
-    # HRank.perform_asymmetric(req5)
-    # print()
-    
-    # # RQ6
-    # print("Requirement 6 for Metapath 4:\n")    
-    # req6 = query.metapath_4_req_6(mean_time)
-    # # Calling HRanking Function
-    # HRank.perform_asymmetric(req6)
-    # print()
-
-    # # RQ7
-    # print("Requirement 7 for Metapath 4:\n")
-    # req7 = query.metapath_4_req_7(mean_time)  
-    # # Calling HRanking Function
-    # HRank.perform_asymmetric(req7)
-    # print()
-    
-    # # RQ8
-    # print("Requirement 8 for Metapath 4:\n")    
-    # req8 = query.metapath_4_req_8(mean_time)
-    # # Calling HRanking Function
-    # HRank.perform_asymmetric(req8)
-    # print()
+    # RQ2
+    print("Requirement 2 for Metapath 2:\n")    
+    req2 = query.metapath_2_req_2(rejection_mean_time)
+    # Calling HRanking Function
+    HRank.perform_asymmetric(req2)
+    print()
     
 
 
