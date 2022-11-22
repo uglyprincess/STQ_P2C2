@@ -23,17 +23,29 @@ class metapath_4():
     def metapath_4_req_1(self, mean_time):
         
         prs_list = STQ.find_less_than_rejected_prs(mean_time)
-                
-        metapaths = []
+        
+        prs_dict = dict()
         
         for pr in prs_list:
-            for file_1 in self.files_list:
+            prs_dict[pr] = True
+        
+        print(len(prs_dict))     
+        metapaths = []
+        
+        self.files = list()
+        
+        # for f in self.files_list:
+            
+        #     if prs_dict[f["pull_request_id"]] == True:
+        #         self.files.append(f)
                 
-                if pr == str(file_1["pull_request_id"]):
-                            
-                    for file_2 in self.files_list:
+        for file_1 in self.files:
+            
+            if prs_dict[file_1["pull_request_id"]] == True:        
+                
+                for file_2 in self.files:
                         
-                        if pr == str(file_2["pull_request_id"]):
+                        if prs_dict[file_2["pull_request_id"]] == True:
                             
                             if(str(file_1["_id"]) == str(file_2["_id"]) and str(file_1["pull_request_id"]) != str(file_2["pull_request_id"])):
                                 pull_request_1 = self.pull_requests_list.find_one({"_id": file_1["pull_request_id"]})
@@ -47,6 +59,7 @@ class metapath_4():
                                         "pull_request_2": str(pull_request_2["_id"]),
                                     }
                                 )
+            
         
         return metapaths
 
