@@ -100,7 +100,7 @@ class smartshark():
                     total_reviews = total_reviews + 1
                     
         self.accept_pr_mean_time = int(round(total_time/total_reviews))
-        print(f"\nAverage acceptance time for Accepted PRs is {self.reject_pr_mean_time} seconds\n")
+        print(f"\nAverage acceptance time for Accepted PRs is {self.accept_pr_mean_time} seconds\n")
         
         return self.accept_pr_mean_time
     
@@ -137,7 +137,7 @@ class smartshark():
                     total_reviews = total_reviews + 1
                     
         self.all_pr_mean_time = int(round(total_time/total_reviews))
-        print(f"\nAverage decision time for All PRs is {self.reject_pr_mean_time} seconds\n")
+        print(f"\nAverage decision time for All PRs is {self.all_pr_mean_time} seconds\n")
         
         return self.all_pr_mean_time
         
