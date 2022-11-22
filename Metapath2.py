@@ -17,8 +17,8 @@ class metapath_4():
         
         self.pull_requests = self.db["pull_request"]
         self.pull_requests_list = list(self.pull_requests.find({"creator_id": {"$exists": True}}))
-        self.pull_request_reviews = self.db["pull_request_review"]
-        self.reviews_list = list(self.pull_request_reviews.find({"creator_id": {"$exists": True}}))
+        self.pull_request_files = self.db["pull_request_file"]
+        self.files_list = list(self.pull_request_files.find({"pull_request_id": {"$exists": True}}))
                 
     def metapath_4_req_1(self, mean_time):
         
@@ -26,26 +26,27 @@ class metapath_4():
                 
         metapaths = []
         
-        for review in self.reviews_list:
-            
-            reviewer_id = str(review["creator_id"])
-            review_id = str(review["_id"])
-                        
-            for pr in prs_list:
-                if(str(review["pull_request_id"]) == pr):
-                                        
-                    for pr_info in self.pull_requests_list:
-                        
-                        if(str(pr_info["_id"])==pr):
+        for pr in prs_list:
+            for file_1 in self.files_list:
+                
+                if pr == str(file_1["pull_request_id"]):
                             
-                            metapaths.append(
-                                {
-                                    "developer": str(pr_info["creator_id"]),
-                                    "pull_request": pr,
-                                    "pull_request_review": review_id,
-                                    "reviewer": reviewer_id
-                                }
-                            )
+                    for file_2 in self.files_list:
+                        
+                        if pr == str(file_2["pull_request_id"]):
+                            
+                            if(str(file_1["_id"]) == str(file_2["_id"]) and str(file_1["pull_request_id"]) != str(file_2["pull_request_id"])):
+                                pull_request_1 = self.pull_requests_list.find_one({"_id": file_1["pull_request_id"]})
+                                pull_request_2 = self.pull_requests_list.find_one({"_id": file_2["pull_request_id"]})
+                                metapaths.append(
+                                    {
+                                        "developer_1": str(pull_request_1["creator_id"]),
+                                        "pull_request_1": str(pull_request_1["_id"]),
+                                        "file": str(file_1["_id"]),
+                                        "developer_2": str(pull_request_2["creator_id"]),
+                                        "pull_request_2": str(pull_request_2["_id"]),
+                                    }
+                                )
         
         return metapaths
 
@@ -266,54 +267,54 @@ if __name__ == "__main__":
     HRank.perform_asymmetric(req1)
     print()
     
-    # RQ2
-    print("Requirement 2 for Metapath 4:\n")    
-    req2 = query.metapath_4_req_2(mean_time)
-    # Calling HRanking Function
-    HRank.perform_asymmetric(req2)
-    print()
+    # # RQ2
+    # print("Requirement 2 for Metapath 4:\n")    
+    # req2 = query.metapath_4_req_2(mean_time)
+    # # Calling HRanking Function
+    # HRank.perform_asymmetric(req2)
+    # print()
 
-    # RQ3
-    print("Requirement 3 for Metapath 4:\n")    
-    req3 = query.metapath_4_req_3(mean_time)
-    # Calling HRanking Function
-    HRank.perform_asymmetric(req3)
-    print()
+    # # RQ3
+    # print("Requirement 3 for Metapath 4:\n")    
+    # req3 = query.metapath_4_req_3(mean_time)
+    # # Calling HRanking Function
+    # HRank.perform_asymmetric(req3)
+    # print()
     
-    # RQ4
-    print("Requirement 4 for Metapath 4:\n")    
-    req4 = query.metapath_4_req_4(mean_time)
-    # Calling HRanking Function
-    HRank.perform_asymmetric(req4)
-    print()
+    # # RQ4
+    # print("Requirement 4 for Metapath 4:\n")    
+    # req4 = query.metapath_4_req_4(mean_time)
+    # # Calling HRanking Function
+    # HRank.perform_asymmetric(req4)
+    # print()
 
-    # RQ5
-    print("Requirement 5 for Metapath 4:\n")    
-    req5 = query.metapath_4_req_5(mean_time)
-    # Calling HRanking Function
-    HRank.perform_asymmetric(req5)
-    print()
+    # # RQ5
+    # print("Requirement 5 for Metapath 4:\n")    
+    # req5 = query.metapath_4_req_5(mean_time)
+    # # Calling HRanking Function
+    # HRank.perform_asymmetric(req5)
+    # print()
     
-    # RQ6
-    print("Requirement 6 for Metapath 4:\n")    
-    req6 = query.metapath_4_req_6(mean_time)
-    # Calling HRanking Function
-    HRank.perform_asymmetric(req6)
-    print()
+    # # RQ6
+    # print("Requirement 6 for Metapath 4:\n")    
+    # req6 = query.metapath_4_req_6(mean_time)
+    # # Calling HRanking Function
+    # HRank.perform_asymmetric(req6)
+    # print()
 
-    # RQ7
-    print("Requirement 7 for Metapath 4:\n")
-    req7 = query.metapath_4_req_7(mean_time)  
-    # Calling HRanking Function
-    HRank.perform_asymmetric(req7)
-    print()
+    # # RQ7
+    # print("Requirement 7 for Metapath 4:\n")
+    # req7 = query.metapath_4_req_7(mean_time)  
+    # # Calling HRanking Function
+    # HRank.perform_asymmetric(req7)
+    # print()
     
-    # RQ8
-    print("Requirement 8 for Metapath 4:\n")    
-    req8 = query.metapath_4_req_8(mean_time)
-    # Calling HRanking Function
-    HRank.perform_asymmetric(req8)
-    print()
+    # # RQ8
+    # print("Requirement 8 for Metapath 4:\n")    
+    # req8 = query.metapath_4_req_8(mean_time)
+    # # Calling HRanking Function
+    # HRank.perform_asymmetric(req8)
+    # print()
     
 
 
