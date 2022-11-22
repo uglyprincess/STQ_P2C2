@@ -66,22 +66,27 @@ class metapath_4():
         
         for review in self.reviews_list:
             
-            reviewer_id = str(review["creator_id"])
+            reviewer_id = review["creator_id"]
             review_id = str(review["_id"])
+            
+            actual_reviewer_id = str(self.BRID.reverse_identity_dict[reviewer_id])
                         
             for pr in prs_list:
+                                
                 if(str(review["pull_request_id"]) == pr):
-                                        
+                                    
                     for pr_info in self.pull_requests_list:
+                        
+                        actual_developer_id = str(self.BRID.reverse_identity_dict[pr_info["creator_id"]])
                         
                         if(str(pr_info["_id"])==pr):
                             
                             metapaths.append(
                                 {
-                                    "developer": str(pr_info["creator_id"]),
+                                    "developer": actual_developer_id,
                                     "pull_request": pr,
                                     "pull_request_review": review_id,
-                                    "reviewer": reviewer_id
+                                    "reviewer": actual_reviewer_id
                                 }
                             )
         
@@ -95,22 +100,27 @@ class metapath_4():
         
         for review in self.reviews_list:
             
-            reviewer_id = str(review["creator_id"])
+            reviewer_id = review["creator_id"]
             review_id = str(review["_id"])
+            
+            actual_reviewer_id = str(self.BRID.reverse_identity_dict[reviewer_id])
                         
             for pr in prs_list:
+                                
                 if(str(review["pull_request_id"]) == pr):
-                                        
+                                    
                     for pr_info in self.pull_requests_list:
+                        
+                        actual_developer_id = str(self.BRID.reverse_identity_dict[pr_info["creator_id"]])
                         
                         if(str(pr_info["_id"])==pr):
                             
                             metapaths.append(
                                 {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
+                                    "developer": actual_developer_id,
                                     "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
+                                    "pull_request_review": review_id,
+                                    "reviewer": actual_reviewer_id
                                 }
                             )
         
@@ -124,22 +134,27 @@ class metapath_4():
         
         for review in self.reviews_list:
             
-            reviewer_id = str(review["creator_id"])
+            reviewer_id = review["creator_id"]
             review_id = str(review["_id"])
+            
+            actual_reviewer_id = str(self.BRID.reverse_identity_dict[reviewer_id])
                         
             for pr in prs_list:
+                                
                 if(str(review["pull_request_id"]) == pr):
-                                        
+                                    
                     for pr_info in self.pull_requests_list:
+                        
+                        actual_developer_id = str(self.BRID.reverse_identity_dict[pr_info["creator_id"]])
                         
                         if(str(pr_info["_id"])==pr):
                             
                             metapaths.append(
                                 {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
+                                    "developer": actual_developer_id,
                                     "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
+                                    "pull_request_review": review_id,
+                                    "reviewer": actual_reviewer_id
                                 }
                             )
         
@@ -153,22 +168,27 @@ class metapath_4():
         
         for review in self.reviews_list:
             
-            reviewer_id = str(review["creator_id"])
+            reviewer_id = review["creator_id"]
             review_id = str(review["_id"])
+            
+            actual_reviewer_id = str(self.BRID.reverse_identity_dict[reviewer_id])
                         
             for pr in prs_list:
+                                
                 if(str(review["pull_request_id"]) == pr):
-                                        
+                                    
                     for pr_info in self.pull_requests_list:
+                        
+                        actual_developer_id = str(self.BRID.reverse_identity_dict[pr_info["creator_id"]])
                         
                         if(str(pr_info["_id"])==pr):
                             
                             metapaths.append(
                                 {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
+                                    "developer": actual_developer_id,
                                     "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
+                                    "pull_request_review": review_id,
+                                    "reviewer": actual_reviewer_id
                                 }
                             )
         
@@ -182,22 +202,27 @@ class metapath_4():
         
         for review in self.reviews_list:
             
-            reviewer_id = str(review["creator_id"])
+            reviewer_id = review["creator_id"]
             review_id = str(review["_id"])
+            
+            actual_reviewer_id = str(self.BRID.reverse_identity_dict[reviewer_id])
                         
             for pr in prs_list:
+                                
                 if(str(review["pull_request_id"]) == pr):
-                                        
+                                    
                     for pr_info in self.pull_requests_list:
+                        
+                        actual_developer_id = str(self.BRID.reverse_identity_dict[pr_info["creator_id"]])
                         
                         if(str(pr_info["_id"])==pr):
                             
                             metapaths.append(
                                 {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
+                                    "developer": actual_developer_id,
                                     "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
+                                    "pull_request_review": review_id,
+                                    "reviewer": actual_reviewer_id
                                 }
                             )
         
@@ -211,22 +236,27 @@ class metapath_4():
         
         for review in self.reviews_list:
             
-            reviewer_id = str(review["creator_id"])
+            reviewer_id = review["creator_id"]
             review_id = str(review["_id"])
+            
+            actual_reviewer_id = str(self.BRID.reverse_identity_dict[reviewer_id])
                         
             for pr in prs_list:
+                                
                 if(str(review["pull_request_id"]) == pr):
-                                        
+                                    
                     for pr_info in self.pull_requests_list:
+                        
+                        actual_developer_id = str(self.BRID.reverse_identity_dict[pr_info["creator_id"]])
                         
                         if(str(pr_info["_id"])==pr):
                             
                             metapaths.append(
                                 {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
+                                    "developer": actual_developer_id,
                                     "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
+                                    "pull_request_review": review_id,
+                                    "reviewer": actual_reviewer_id
                                 }
                             )
         
@@ -240,22 +270,27 @@ class metapath_4():
         
         for review in self.reviews_list:
             
-            reviewer_id = str(review["creator_id"])
+            reviewer_id = review["creator_id"]
             review_id = str(review["_id"])
+            
+            actual_reviewer_id = str(self.BRID.reverse_identity_dict[reviewer_id])
                         
             for pr in prs_list:
+                                
                 if(str(review["pull_request_id"]) == pr):
-                                        
+                                    
                     for pr_info in self.pull_requests_list:
+                        
+                        actual_developer_id = str(self.BRID.reverse_identity_dict[pr_info["creator_id"]])
                         
                         if(str(pr_info["_id"])==pr):
                             
                             metapaths.append(
                                 {
-                                    "reviewer": reviewer_id,
-                                    "pull_request_review": review_id,
+                                    "developer": actual_developer_id,
                                     "pull_request": pr,
-                                    "developer": str(pr_info["creator_id"]),
+                                    "pull_request_review": review_id,
+                                    "reviewer": actual_reviewer_id
                                 }
                             )
         
