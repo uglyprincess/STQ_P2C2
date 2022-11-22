@@ -131,11 +131,11 @@ class metapath_7():
                                                             
                                 metapaths.append(
                                     {
-                                        "developer": actual_developer_id,
-                                        "file": file,
-                                        "pull_request": pr,
+                                        "reviewer": actual_reviewer_id,
                                         "pull_request_review": review_id,
-                                        "reviewer": actual_reviewer_id
+                                        "pull_request": pr,
+                                        "file": file,                                        
+                                        "developer": actual_developer_id,
                                     }
                                 )
         
@@ -170,11 +170,11 @@ class metapath_7():
                                                             
                                 metapaths.append(
                                     {
-                                        "developer": actual_developer_id,
-                                        "file": file,
-                                        "pull_request": pr,
+                                        "reviewer": actual_reviewer_id,
                                         "pull_request_review": review_id,
-                                        "reviewer": actual_reviewer_id
+                                        "pull_request": pr,
+                                        "file": file,                                        
+                                        "developer": actual_developer_id,
                                     }
                                 )
         
@@ -209,11 +209,11 @@ class metapath_7():
                                                             
                                 metapaths.append(
                                     {
-                                        "developer": actual_developer_id,
-                                        "file": file,
-                                        "pull_request": pr,
+                                        "reviewer": actual_reviewer_id,
                                         "pull_request_review": review_id,
-                                        "reviewer": actual_reviewer_id
+                                        "pull_request": pr,
+                                        "file": file,                                        
+                                        "developer": actual_developer_id,
                                     }
                                 )
         
@@ -248,11 +248,11 @@ class metapath_7():
                                                             
                                 metapaths.append(
                                     {
-                                        "developer": actual_developer_id,
-                                        "file": file,
-                                        "pull_request": pr,
+                                        "reviewer": actual_reviewer_id,
                                         "pull_request_review": review_id,
-                                        "reviewer": actual_reviewer_id
+                                        "pull_request": pr,
+                                        "file": file,                                        
+                                        "developer": actual_developer_id,
                                     }
                                 )
         
@@ -287,11 +287,11 @@ class metapath_7():
                                                             
                                 metapaths.append(
                                     {
-                                        "developer": actual_developer_id,
-                                        "file": file,
-                                        "pull_request": pr,
+                                        "reviewer": actual_reviewer_id,
                                         "pull_request_review": review_id,
-                                        "reviewer": actual_reviewer_id
+                                        "pull_request": pr,
+                                        "file": file,                                        
+                                        "developer": actual_developer_id,
                                     }
                                 )
         
@@ -326,11 +326,11 @@ class metapath_7():
                                                             
                                 metapaths.append(
                                     {
-                                        "developer": actual_developer_id,
-                                        "file": file,
-                                        "pull_request": pr,
+                                        "reviewer": actual_reviewer_id,
                                         "pull_request_review": review_id,
-                                        "reviewer": actual_reviewer_id
+                                        "pull_request": pr,
+                                        "file": file,                                        
+                                        "developer": actual_developer_id,
                                     }
                                 )
         

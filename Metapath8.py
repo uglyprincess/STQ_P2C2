@@ -51,9 +51,7 @@ class metapath_8():
                             # print(file_2_path)
                             
                             if(file_1_path is file_2_path):
-                                
-                                print("Files matched!")
-                                
+                                                                
                                 developer = self.pull_requests.find_one({"_id": ObjectId(pr_1)})["creator_id"]
                                 
                                 actual_developer = str(self.BRID.reverse_identity_dict[developer])

@@ -117,10 +117,10 @@ class metapath_4():
                             
                             metapaths.append(
                                 {
-                                    "developer": actual_developer_id,
-                                    "pull_request": pr,
+                                    "reviewer": actual_reviewer_id,
                                     "pull_request_review": review_id,
-                                    "reviewer": actual_reviewer_id
+                                    "pull_request": pr,                                    
+                                    "developer": actual_developer_id,
                                 }
                             )
         
@@ -151,10 +151,10 @@ class metapath_4():
                             
                             metapaths.append(
                                 {
-                                    "developer": actual_developer_id,
-                                    "pull_request": pr,
+                                    "reviewer": actual_reviewer_id,
                                     "pull_request_review": review_id,
-                                    "reviewer": actual_reviewer_id
+                                    "pull_request": pr,                                    
+                                    "developer": actual_developer_id,
                                 }
                             )
         
@@ -185,10 +185,10 @@ class metapath_4():
                             
                             metapaths.append(
                                 {
-                                    "developer": actual_developer_id,
-                                    "pull_request": pr,
+                                    "reviewer": actual_reviewer_id,
                                     "pull_request_review": review_id,
-                                    "reviewer": actual_reviewer_id
+                                    "pull_request": pr,                                    
+                                    "developer": actual_developer_id,
                                 }
                             )
         
@@ -219,10 +219,10 @@ class metapath_4():
                             
                             metapaths.append(
                                 {
-                                    "developer": actual_developer_id,
-                                    "pull_request": pr,
+                                    "reviewer": actual_reviewer_id,
                                     "pull_request_review": review_id,
-                                    "reviewer": actual_reviewer_id
+                                    "pull_request": pr,                                    
+                                    "developer": actual_developer_id,
                                 }
                             )
         
@@ -253,10 +253,10 @@ class metapath_4():
                             
                             metapaths.append(
                                 {
-                                    "developer": actual_developer_id,
-                                    "pull_request": pr,
+                                    "reviewer": actual_reviewer_id,
                                     "pull_request_review": review_id,
-                                    "reviewer": actual_reviewer_id
+                                    "pull_request": pr,                                    
+                                    "developer": actual_developer_id,
                                 }
                             )
         
@@ -287,10 +287,10 @@ class metapath_4():
                             
                             metapaths.append(
                                 {
-                                    "developer": actual_developer_id,
-                                    "pull_request": pr,
+                                    "reviewer": actual_reviewer_id,
                                     "pull_request_review": review_id,
-                                    "reviewer": actual_reviewer_id
+                                    "pull_request": pr,                                    
+                                    "developer": actual_developer_id,
                                 }
                             )
         

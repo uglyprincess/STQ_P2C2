@@ -38,7 +38,7 @@ class metapath_5():
             actual_creator_id = str(self.BRID.reverse_identity_dict[event_creator])
                         
             for pr in prs_list:
-                if(str(event["pull_request_id"]) == pr):
+                if(str(event["pull_request_id"]) == pr and event_type == "merged"):
                                                             
                     for pr_info in self.pull_requests_list:
                         
